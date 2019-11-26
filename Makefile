@@ -33,7 +33,7 @@ lint: golint
 	@echo "ok"
 
 build: tidy check
-	@echo "build go-language"
+	@echo "build go-locale"
 	@go build ./...
 	@echo "ok"
 
