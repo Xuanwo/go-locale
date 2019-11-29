@@ -1,0 +1,15 @@
+language: go
+go:
+  - "1.13"
+
+install:
+  # code lint tools
+  - go get -u golang.org/x/lint/golint
+
+script:
+  - make check
+  - make build
+  - make test
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
