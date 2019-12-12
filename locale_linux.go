@@ -32,7 +32,7 @@ func detect() (tag language.Tag, err error) {
 		return
 	}
 
-	err = ErrNotDetected
+	err = fmt.Errorf(errorMessage, ErrNotDetected)
 	return
 }
 
