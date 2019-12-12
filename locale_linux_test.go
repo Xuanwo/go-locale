@@ -68,7 +68,7 @@ func TestUnixDetect(t *testing.T) {
 		})
 
 		_, err := detect()
-		assert.Equal(t, ErrNotDetected, err)
+		assert.True(t, errors.Is(err, ErrNotDetected))
 	})
 }
 
