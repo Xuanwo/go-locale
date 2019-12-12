@@ -8,6 +8,32 @@
 
 `go-locale` is a Golang lib for cross platform locale detection.
 
+## OS Support
+
+### Linux
+
+Check order
+
+- `LANGUAGE` env
+- `LC_ALL` env
+- `LC_MESSAGES` env
+- `LANG` env
+- `locale` command call
+
+Support
+
+- All linux distributions
+
+### Windows
+
+Check order
+
+- Win32 OLE
+
+Support
+
+- Windows Vista or Windows Server 2008 Later
+
 ## Usage
 
 ```go
