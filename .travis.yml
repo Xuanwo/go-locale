@@ -1,4 +1,7 @@
 language: go
+os:
+  - linux
+  - windows
 go:
   - "1.13"
 
