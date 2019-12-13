@@ -2,6 +2,7 @@ language: go
 os:
   - linux
   - windows
+  - osx
 go:
   - "1.13"
 
