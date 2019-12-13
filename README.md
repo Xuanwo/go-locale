@@ -34,6 +34,17 @@ Support
 
 - Windows Vista or Windows Server 2008 Later
 
+### macOS X (darwin)
+
+Check order
+
+- All check for Linux
+- User Defaults System
+
+Support
+
+- All macOS X version
+
 ## Usage
 
 ```go

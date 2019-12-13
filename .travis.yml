@@ -2,6 +2,7 @@ language: go
 os:
   - linux
   - windows
+  - osx
 go:
   - "1.13"
 
@@ -17,4 +18,4 @@ script:
   - make test
 
 after_success:
-  - bash <(curl -s https://codecov.io/bash)
+  - if [ $TRAVIS_OS_NAME = linux ]; bash <(curl -s https://codecov.io/bash); fi
