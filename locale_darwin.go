@@ -1,17 +1,14 @@
 package locale
 
 import (
-	"bufio"
-	"bytes"
 	"errors"
 	"fmt"
-	"os/exec"
 	"strings"
 
 	"golang.org/x/text/language"
 )
 
-func detect() (tag language.Tag, err error) {
+var detect = func() (tag language.Tag, err error) {
 	errorMessage := "detect: %w"
 
 	// Check via env firstly.
@@ -52,10 +49,10 @@ func detect() (tag language.Tag, err error) {
 func detectViaUserDefaultsSystem() (string, error) {
 	errorMessage := "detect via defaults: %w"
 
-	cmd := exec.Command("defaults", "read", "NSGlobalDomain", "AppleLanguages")
-
-	var out bytes.Buffer
-	cmd.Stdout = &out
+	out, err := execCommand("defaults", "read", "NSGlobalDomain", "AppleLanguages")
+	if err != nil {
+		return "", fmt.Errorf(errorMessage, err)
+	}
 
 	// Output should be like:
 	//
@@ -83,15 +80,11 @@ func detectViaUserDefaultsSystem() (string, error) {
 	//    hu,
 	//    tr
 	// )
-	err := cmd.Run()
-	if err != nil {
-		return "", fmt.Errorf(errorMessage, err)
-	}
 
-	m := make([]string, 0)
-	s := bufio.NewScanner(&out)
-	for s.Scan() {
-		text := s.Text()
+	lines := strings.Split(string(out), "\n")
+	m := make([]string, 0, len(lines))
+
+	for _, text := range lines {
 		// Ignore "(" and ")"
 		if !strings.HasPrefix(text, " ") {
 			continue

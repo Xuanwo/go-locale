@@ -3,11 +3,7 @@
 package locale
 
 import (
-	"bufio"
-	"bytes"
 	"fmt"
-	"os"
-	"os/exec"
 	"strings"
 )
 
@@ -29,16 +25,16 @@ var envs = []string{"LC_ALL", "LC_MESSAGES", "LANG"}
 //   - http://man7.org/linux/man-pages/man7/locale.7.html
 //   - https://linux.die.net/man/3/gettext
 //   - https://wiki.archlinux.org/index.php/Locale
-func detectViaEnv() string {
+var detectViaEnv = func() string {
 	// Check LANGUAGE: Program use gettext will respect LANGUAGE env
-	s, ok := os.LookupEnv("LANGUAGE")
+	s, ok := lookupEnv("LANGUAGE")
 	if ok {
 		return parseLanguageEnv(s)[0]
 	}
 
 	// Check LC_* in order
 	for _, v := range envs {
-		s, ok := os.LookupEnv(v)
+		s, ok := lookupEnv(v)
 		if ok {
 			return parseLCEnv(s)
 		}
@@ -46,14 +42,13 @@ func detectViaEnv() string {
 	return ""
 }
 
-func detectViaLocale() (string, error) {
+var detectViaLocale = func() (string, error) {
 	errorMessage := "detect via locale: %w"
 
-	cmd := exec.Command("locale")
-
-	var out bytes.Buffer
-	cmd.Stdout = &out
-
+	out, err := execCommand("locale")
+	if err != nil {
+		return "", fmt.Errorf(errorMessage, err)
+	}
 	// Output should be like:
 	//
 	// LANG=en_US.UTF-8
@@ -70,16 +65,12 @@ func detectViaLocale() (string, error) {
 	// LC_MEASUREMENT="en_US.UTF-8"
 	// LC_IDENTIFICATION="en_US.UTF-8"
 	// LC_ALL=
-	err := cmd.Run()
-	if err != nil {
-		return "", fmt.Errorf(errorMessage, err)
-	}
 
 	m := make(map[string]string)
-	s := bufio.NewScanner(&out)
-	for s.Scan() {
-		value := strings.Split(s.Text(), "=")
-		// Ignore not set locale value.
+
+	for _, line := range strings.Split(string(out), "\n") {
+		value := strings.SplitN(line, "=", 2)
+		// Ignore unset locale value.
 		if len(value) != 2 || value[1] == "" {
 			continue
 		}
