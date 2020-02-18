@@ -9,7 +9,7 @@ import (
 	"golang.org/x/text/language"
 )
 
-func detect() (tag language.Tag, err error) {
+var detect = func() (tag language.Tag, err error) {
 	errorMessage := "detect: %w"
 
 	tag, err = detectViaWin32OLE()
