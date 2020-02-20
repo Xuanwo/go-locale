@@ -1,3 +1,5 @@
+// +build !unit_test
+
 package locale
 
 import (
@@ -6,39 +8,32 @@ import (
 
 	"github.com/go-ole/go-ole"
 	"github.com/go-ole/go-ole/oleutil"
-	"golang.org/x/text/language"
 )
 
-func detect() (tag language.Tag, err error) {
-	errorMessage := "detect: %w"
-
-	tag, err = detectViaWin32OLE()
-	if err == nil {
-		return
-	}
-
-	err = fmt.Errorf(errorMessage, ErrNotDetected)
-	return
+var detectors = []detector{
+	detectViaWin32OLE,
 }
 
 // osLanguageCode is a mapping from Microsoft Windows language code to language.Tag
 //
-// ref: https://docs.microsoft.com/en-us/windows/win32/cimwin32prov/win32-operatingsystem
-var osLanguageCode = map[uint32]language.Tag{
-	0x4:   language.SimplifiedChinese,  // Chinese (Simplified)– China
-	0x9:   language.English,            // English
-	0x404: language.TraditionalChinese, // Chinese (Traditional) – Taiwan
-	0x409: language.AmericanEnglish,    // English – United States
-	0x411: language.Japanese,           // Japanese
-	0x412: language.Korean,             // Korean
-	0x804: language.SimplifiedChinese,  // Chinese (Simplified) – PRC
-	0x809: language.BritishEnglish,     // English – United Kingdom
+// ref:
+//   - https://docs.microsoft.com/en-us/windows/win32/cimwin32prov/win32-operatingsystem
+//   - https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry
+var osLanguageCode = map[uint32]string{
+	0x4:   "zh-Hans-CN", // Chinese (Simplified)– China
+	0x9:   "en",         // English
+	0x404: "zh-Hant-TW", // Chinese (Traditional) – Taiwan
+	0x409: "en-US",      // English – United States
+	0x411: "ja",         // Japanese
+	0x412: "ko",         // Korean
+	0x804: "zh-Hans-CN", // Chinese (Simplified) – PRC
+	0x809: "en-US",      // English – United Kingdom
 }
 
 // detectViaWin32OLE will detect system's language via w32 ole.
 //
 // code inspired from https://github.com/iamacarpet/go-win64api
-func detectViaWin32OLE() (tag language.Tag, err error) {
+func detectViaWin32OLE() (langs []string, err error) {
 	errorMessage := "detect via win32 OLE: %w"
 
 	err = ole.CoInitialize(0)
@@ -92,10 +87,10 @@ func detectViaWin32OLE() (tag language.Tag, err error) {
 		return
 	}
 
-	tag, ok := osLanguageCode[uint32(languageCode.Val)]
+	lang, ok := osLanguageCode[uint32(languageCode.Val)]
 	if !ok {
 		err = fmt.Errorf(errorMessage, errors.New("language code not exist"))
 		return
 	}
-	return
+	return []string{lang}, nil
 }
