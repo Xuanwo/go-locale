@@ -53,7 +53,7 @@ func detectViaUserDefaultsSystem() ([]string, error) {
 	// )
 	err := cmd.Run()
 	if err != nil {
-		return nil, err
+		return nil, &Error{"detect via user defaults system", err}
 	}
 
 	m := make([]string, 0)
@@ -70,7 +70,7 @@ func detectViaUserDefaultsSystem() ([]string, error) {
 	}
 
 	if len(m) == 0 {
-		return nil, ErrNotDetected
+		return nil, &Error{"detect via user defaults system", ErrNotDetected}
 	}
 	return m, nil
 }

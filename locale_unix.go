@@ -28,7 +28,7 @@ var envs = []string{"LC_ALL", "LC_MESSAGES", "LANG"}
 func detectViaEnvLanguage() ([]string, error) {
 	s, ok := os.LookupEnv("LANGUAGE")
 	if !ok || s == "" {
-		return nil, ErrNotDetected
+		return nil, &Error{"detect via env language", ErrNotDetected}
 	}
 	return parseEnvLanguage(s), nil
 }
@@ -47,7 +47,7 @@ func detectViaEnvLc() ([]string, error) {
 			return []string{parseEnvLc(s)}, nil
 		}
 	}
-	return nil, ErrNotDetected
+	return nil, &Error{"detect via env lc", ErrNotDetected}
 }
 
 func detectViaLocale() ([]string, error) {
@@ -74,7 +74,7 @@ func detectViaLocale() ([]string, error) {
 	// LC_ALL=
 	err := cmd.Run()
 	if err != nil {
-		return nil, err
+		return nil, &Error{"detect via locale", err}
 	}
 
 	m := make(map[string]string)
@@ -94,7 +94,7 @@ func detectViaLocale() ([]string, error) {
 			return []string{parseEnvLc(x)}, nil
 		}
 	}
-	return nil, ErrNotDetected
+	return nil, &Error{"detect via locale", ErrNotDetected}
 }
 
 // parseEnvLanguage will parse LANGUAGE env.
