@@ -9,8 +9,8 @@ import (
 var (
 	// ErrNotDetected returns while no locale detected.
 	ErrNotDetected = errors.New("not detected")
-	// ErrSystemError returns while error happened in system call.
-	ErrSystemError = errors.New("system error")
+	// ErrNotSupported means current platform or language is not supported.
+	ErrNotSupported = errors.New("not supported")
 )
 
 // Detect will detect current env's language.
@@ -29,7 +29,7 @@ func DetectAll() (tags []language.Tag, err error) {
 		return
 	}
 
-	tags = make([]language.Tag, 0,len(lang))
+	tags = make([]language.Tag, 0, len(lang))
 	for _, v := range lang {
 		tags = append(tags, language.Make(v))
 	}
@@ -47,7 +47,7 @@ func detect() (lang []string, err error) {
 		}
 		return
 	}
-	return nil, ErrNotDetected
+	return nil, &Error{"detect", ErrNotDetected}
 }
 
 type detector func() ([]string, error)

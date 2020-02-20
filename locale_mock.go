@@ -25,7 +25,7 @@ func (l *mock) get() ([]string, error) {
 func (l *mock) set(s []string, e error) {
 	l.Lock()
 	defer l.Unlock()
-	
+
 	l.s = s
 	l.err = e
 }
