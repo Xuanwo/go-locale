@@ -58,6 +58,12 @@ func main() {
         log.Fatal(err)
     }
     // Have fun with language.Tag!
+    
+    tags, err := locale.DetectAll()
+    if err != nil {
+        log.Fatal(err)
+    }
+    // Get all available tags
 }
 ```
 
