@@ -4,10 +4,11 @@ SHELL := /bin/bash
 
 help:
 	@echo "Please use \`make <target>\` where <target> is one of"
-	@echo "  check      to format, vet and lint "
-	@echo "  build      to create bin directory and build"
-	@echo "  generate   to generate code"
-	@echo "  test       to run test"
+	@echo "  check               to format, vet and lint "
+	@echo "  build               to create bin directory and build"
+	@echo "  generate            to generate code"
+	@echo "  unit_test           to run unit test"
+	@echo "  integration_test    to run integration test"
 
 # golint: go get -u golang.org/x/lint/golint
 tools := golint
@@ -37,10 +38,15 @@ build: tidy check
 	@go build ./...
 	@echo "ok"
 
-test:
-	@echo "run test"
-	@go test -race -coverprofile=coverage.txt -covermode=atomic -v ./...
+unit_test:
+	@echo "run unit test"
+	@go test -race -tags unit_test -coverprofile=coverage.txt -covermode=atomic -v ./...
 	@go tool cover -html="coverage.txt" -o "coverage.html"
+	@echo "ok"
+
+integration_test:
+	@echo "run integration test"
+	@go test -race -tags integration_test -v ./...
 	@echo "ok"
 
 tidy:

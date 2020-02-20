@@ -15,7 +15,8 @@ install:
 script:
   - make check
   - make build
-  - make test
+  - make unit_test
+  - make integration_test
 
 after_success:
   - if [ $TRAVIS_OS_NAME = linux ]; then bash <(curl -s https://codecov.io/bash); fi

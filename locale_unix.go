@@ -1,11 +1,11 @@
 // +build darwin dragonfly freebsd linux netbsd openbsd
+// +build !unit_test
 
 package locale
 
 import (
 	"bufio"
 	"bytes"
-	"fmt"
 	"os"
 	"os/exec"
 	"strings"
@@ -22,33 +22,35 @@ import (
 // LANG is the default locale.
 var envs = []string{"LC_ALL", "LC_MESSAGES", "LANG"}
 
-// detectFromEnv will check linux env in order which decided by
+// detectViaEnvLanguage checks env LANGUAGE
+//
+// Program use gettext will respect LANGUAGE env
+func detectViaEnvLanguage() ([]string, error) {
+	s, ok := os.LookupEnv("LANGUAGE")
+	if !ok || s == "" {
+		return nil, ErrNotDetected
+	}
+	return parseEnvLanguage(s), nil
+}
+
+// detectViaEnvLc checks LC_* in order which decided by
 // unix convention
 //
 // ref:
 //   - http://man7.org/linux/man-pages/man7/locale.7.html
 //   - https://linux.die.net/man/3/gettext
 //   - https://wiki.archlinux.org/index.php/Locale
-func detectViaEnv() string {
-	// Check LANGUAGE: Program use gettext will respect LANGUAGE env
-	s, ok := os.LookupEnv("LANGUAGE")
-	if ok {
-		return parseLanguageEnv(s)[0]
-	}
-
-	// Check LC_* in order
+func detectViaEnvLc() ([]string, error) {
 	for _, v := range envs {
 		s, ok := os.LookupEnv(v)
-		if ok {
-			return parseLCEnv(s)
+		if ok && s != "" {
+			return []string{parseEnvLc(s)}, nil
 		}
 	}
-	return ""
+	return nil, ErrNotDetected
 }
 
-func detectViaLocale() (string, error) {
-	errorMessage := "detect via locale: %w"
-
+func detectViaLocale() ([]string, error) {
 	cmd := exec.Command("locale")
 
 	var out bytes.Buffer
@@ -72,7 +74,7 @@ func detectViaLocale() (string, error) {
 	// LC_ALL=
 	err := cmd.Run()
 	if err != nil {
-		return "", fmt.Errorf(errorMessage, err)
+		return nil, err
 	}
 
 	m := make(map[string]string)
@@ -89,21 +91,21 @@ func detectViaLocale() (string, error) {
 	for _, v := range envs {
 		x, ok := m[v]
 		if ok {
-			return parseLCEnv(x), nil
+			return []string{parseEnvLc(x)}, nil
 		}
 	}
-	return "", nil
+	return nil, ErrNotDetected
 }
 
-// parseLanguageEnv will parse LANGUAGE env.
+// parseEnvLanguage will parse LANGUAGE env.
 // Input could be: "en_AU:en_GB:en"
-func parseLanguageEnv(s string) []string {
+func parseEnvLanguage(s string) []string {
 	return strings.Split(s, ":")
 }
 
-// parseLCEnv will parse LC_* env.
+// parseEnvLc will parse LC_* env.
 // Input could be: "en_US.UTF-8"
-func parseLCEnv(s string) string {
+func parseEnvLc(s string) string {
 	x := strings.Split(s, ".")
 	// "C" means "ANSI-C" and "POSIX", if locale set to C, we can simple
 	// set returned language to "en_US"

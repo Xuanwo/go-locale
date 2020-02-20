@@ -1,57 +1,25 @@
+// +build !unit_test
+
 package locale
 
 import (
 	"bufio"
 	"bytes"
-	"errors"
-	"fmt"
 	"os/exec"
 	"strings"
-
-	"golang.org/x/text/language"
 )
 
-func detect() (tag language.Tag, err error) {
-	errorMessage := "detect: %w"
-
-	// Check via env firstly.
-	lang := detectViaEnv()
-	if lang != "" {
-		tag = language.Make(lang)
-		return
-	}
-
-	// Check via locale then.
-	lang, err = detectViaLocale()
-	if err != nil && !errors.Is(err, ErrNotDetected) {
-		err = fmt.Errorf(errorMessage, err)
-		return
-	}
-	if lang != "" {
-		tag = language.Make(lang)
-		return
-	}
-
-	lang, err = detectViaUserDefaultsSystem()
-	if err != nil && !errors.Is(err, ErrNotDetected) {
-		err = fmt.Errorf(errorMessage, err)
-		return
-	}
-	if lang != "" {
-		tag = language.Make(lang)
-		return
-	}
-
-	err = fmt.Errorf(errorMessage, ErrNotDetected)
-	return
+var detectors = []detector{
+	detectViaEnvLanguage,
+	detectViaEnvLc,
+	detectViaLocale,
+	detectViaUserDefaultsSystem,
 }
 
 // detectViaUserDefaultsSystem will detect language via Apple User Defaults System
 //
 // ref: https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/UserDefaults/AboutPreferenceDomains/AboutPreferenceDomains.html
-func detectViaUserDefaultsSystem() (string, error) {
-	errorMessage := "detect via defaults: %w"
-
+func detectViaUserDefaultsSystem() ([]string, error) {
 	cmd := exec.Command("defaults", "read", "NSGlobalDomain", "AppleLanguages")
 
 	var out bytes.Buffer
@@ -85,7 +53,7 @@ func detectViaUserDefaultsSystem() (string, error) {
 	// )
 	err := cmd.Run()
 	if err != nil {
-		return "", fmt.Errorf(errorMessage, err)
+		return nil, err
 	}
 
 	m := make([]string, 0)
@@ -101,8 +69,8 @@ func detectViaUserDefaultsSystem() (string, error) {
 		m = append(m, text)
 	}
 
-	if len(m) > 0 {
-		return m[0], nil
+	if len(m) == 0 {
+		return nil, ErrNotDetected
 	}
-	return "", nil
+	return m, nil
 }
