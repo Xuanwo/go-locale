@@ -10,7 +10,7 @@
 
 ## OS Support
 
-### Linux
+### Linux / Solaris / BSD
 
 Check order
 
