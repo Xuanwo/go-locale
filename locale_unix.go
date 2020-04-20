@@ -1,4 +1,4 @@
-// +build darwin dragonfly freebsd linux netbsd openbsd
+// +build darwin dragonfly freebsd linux netbsd openbsd solaris illumos
 // +build !unit_test
 
 package locale
