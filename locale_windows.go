@@ -11,22 +11,6 @@ var detectors = []detector{
 	detectViaWin32OLE,
 }
 
-// osLanguageCode is a mapping from Microsoft Windows language code to language.Tag
-//
-// ref:
-//   - https://docs.microsoft.com/en-us/windows/win32/cimwin32prov/win32-operatingsystem
-//   - https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry
-var osLanguageCode = map[uint32]string{
-	0x4:   "zh-Hans-CN", // Chinese (Simplified)– China
-	0x9:   "en",         // English
-	0x404: "zh-Hant-TW", // Chinese (Traditional) – Taiwan
-	0x409: "en-US",      // English – United States
-	0x411: "ja",         // Japanese
-	0x412: "ko",         // Korean
-	0x804: "zh-Hans-CN", // Chinese (Simplified) – PRC
-	0x809: "en-US",      // English – United Kingdom
-}
-
 // detectViaWin32OLE will detect system's language via w32 ole.
 //
 // code inspired from https://github.com/iamacarpet/go-win64api
