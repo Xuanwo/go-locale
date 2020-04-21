@@ -53,12 +53,12 @@ import (
 )
 
 func main() {
-	tag, err := locale.Detect()
+    tag, err := locale.Detect()
     if err != nil {
         log.Fatal(err)
     }
     // Have fun with language.Tag!
-    
+
     tags, err := locale.DetectAll()
     if err != nil {
         log.Fatal(err)
