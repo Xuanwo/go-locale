@@ -5,11 +5,21 @@ package locale
 
 import (
 	"bufio"
-	"bytes"
 	"os"
-	"os/exec"
+	"path"
 	"strings"
 )
+
+// Unless we call LookupEnv more than 9 times, we should not use Environ.
+//
+// goos: linux
+// goarch: amd64
+// pkg: github.com/Xuanwo/go-locale
+// BenchmarkLookupEnv
+// BenchmarkLookupEnv-8   	37024654	        32.4 ns/op
+// BenchmarkEnviron
+// BenchmarkEnviron-8     	 4275735	       281 ns/op
+// PASS
 
 // envs is the env to be checked.
 //
@@ -50,11 +60,22 @@ func detectViaEnvLc() ([]string, error) {
 	return nil, &Error{"detect via env lc", ErrNotDetected}
 }
 
-func detectViaLocale() ([]string, error) {
-	cmd := exec.Command("locale")
+func detectViaLocaleConf() (_ []string, err error) {
+	defer func() {
+		if err != nil {
+			err = &Error{"detect via locale conf", err}
+		}
+	}()
 
-	var out bytes.Buffer
-	cmd.Stdout = &out
+	fp := getLocaleConfPath()
+	if fp == "" {
+		return nil, ErrNotDetected
+	}
+
+	f, err := os.Open(fp)
+	if err != nil {
+		return nil, err
+	}
 
 	// Output should be like:
 	//
@@ -72,13 +93,8 @@ func detectViaLocale() ([]string, error) {
 	// LC_MEASUREMENT="en_US.UTF-8"
 	// LC_IDENTIFICATION="en_US.UTF-8"
 	// LC_ALL=
-	err := cmd.Run()
-	if err != nil {
-		return nil, &Error{"detect via locale", err}
-	}
-
 	m := make(map[string]string)
-	s := bufio.NewScanner(&out)
+	s := bufio.NewScanner(f)
 	for s.Scan() {
 		value := strings.Split(s.Text(), "=")
 		// Ignore not set locale value.
@@ -94,7 +110,49 @@ func detectViaLocale() ([]string, error) {
 			return []string{parseEnvLc(x)}, nil
 		}
 	}
-	return nil, &Error{"detect via locale", ErrNotDetected}
+	return nil, ErrNotDetected
+}
+
+// getLocaleConfPath will try to get correct locale conf path.
+//
+// Following path could be returned:
+//   - "$XDG_CONFIG_HOME/locale.conf" (follow XDG Base Directory specification)
+//   - "$HOME/.config/locale.conf" (user level locale config)
+//   - "/etc/locale.conf" (system level locale config)
+//   - "" (empty means no valid path found, caller need to handle this.)
+//
+// ref:
+//   - POSIX Locale: https://pubs.opengroup.org/onlinepubs/9699919799/
+//   - XDG Base Directory: https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html
+func getLocaleConfPath() string {
+	// Try to loading from $XDG_CONFIG_HOME/locale.conf
+	xdg, ok := os.LookupEnv("XDG_CONFIG_HOME")
+	if ok {
+		fp := path.Join(xdg, "locale.conf")
+		_, err := os.Stat(fp)
+		if err == nil {
+			return fp
+		}
+	}
+
+	// Try to loading from $HOME/.config/locale.conf
+	home, ok := os.LookupEnv("HOME")
+	if ok {
+		fp := path.Join(home, ".config", "locale.conf")
+		_, err := os.Stat(fp)
+		if err == nil {
+			return fp
+		}
+	}
+
+	// Try to loading from /etc/locale.conf
+	fp := "/etc/locale.conf"
+	_, err := os.Stat(fp)
+	if err == nil {
+		return fp
+	}
+
+	return ""
 }
 
 // parseEnvLanguage will parse LANGUAGE env.
