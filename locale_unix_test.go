@@ -162,10 +162,16 @@ func TestGetLocaleConfPath(t *testing.T) {
 		})
 
 		Convey("When fallback to system level locale.conf", func() {
+			var localeExist bool
+			_, err := os.Stat("/etc/locale.conf")
+			if err == nil {
+				localeExist = true
+			}
+
 			fp := getLocaleConfPath()
 
 			Convey("The path should be equal", func() {
-				So(fp, ShouldEqual, "/etc/locale.conf")
+				So(fp == "/etc/locale.conf", ShouldEqual, localeExist)
 			})
 		})
 	})
