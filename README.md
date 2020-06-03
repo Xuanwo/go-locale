@@ -10,25 +10,33 @@
 
 ## OS Support
 
-### Linux / Solaris / BSD
+### POSIX Compatible Systems
 
 Check order
 
-- `LANGUAGE` env
-- `LC_ALL` env
-- `LC_MESSAGES` env
-- `LANG` env
-- `locale` command call
+- Lookup env `LANGUAGE`
+- Lookup env `LC_ALL`
+- Lookup env `LC_MESSAGES`
+- Lookup env `LANG`
+- Read file `$XDG_CONFIG_HOME/locale.conf`
+- Read file `$HOME/.config/locale.conf`
+- Read file `/etc/locale.conf`
 
 Support
 
-- All linux distributions
+- Linux: Ubuntu, CentOS, RHEL, Archlinux...
+- [DragonFly BSD](https://www.dragonflybsd.org/)
+- [FreeBSD](https://www.freebsd.org/)
+- [illumos](https://illumos.org/)
+- [NetBSD](https://www.netbsd.org/)
+- [OpenBSD](https://www.openbsd.org/)
+- [Solaris](https://www.oracle.com/solaris)
 
 ### Windows
 
 Check order
 
-- Win32 OLE
+- [Win32 OLE](https://docs.microsoft.com/en-us/windows/win32/com/component-object-model--com--portal)
 
 Support
 
@@ -38,8 +46,8 @@ Support
 
 Check order
 
-- All check for Linux
-- User Defaults System
+- All check for POSIX compatible systems
+- macOS X [User Defaults System](https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/UserDefaults/AboutPreferenceDomains/AboutPreferenceDomains.html)
 
 Support
 
