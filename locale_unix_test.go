@@ -5,10 +5,13 @@ package locale
 
 import (
 	"errors"
+	"io/ioutil"
 	"os"
+	"path"
 	"strings"
 	"sync"
 	"testing"
+	"time"
 
 	. "github.com/smartystreets/goconvey/convey"
 )
@@ -112,11 +115,81 @@ func TestDetectViaEnvLc(t *testing.T) {
 	})
 }
 
-func TestDetectViaLocale(t *testing.T) {
-	Convey("detect via locale", t, func() {
-		lang, err := detectViaLocale()
+func TestGetLocaleConfPath(t *testing.T) {
+	Convey("get locale conf path", t, func() {
+		// Make sure env has clear before current test.
+		setupEnv()
 
-		Convey("The error should not be nil", func() {
+		Reset(func() {
+			// Reset all env after every Convey.
+			setupEnv()
+		})
+
+		Convey("When user set XDG_CONFIG_HOME", func() {
+			tmpDir := setupLocaleConf("locale.conf")
+			Reset(func() {
+				_ = os.RemoveAll(tmpDir)
+			})
+
+			err := os.Setenv("XDG_CONFIG_HOME", tmpDir)
+			if err != nil {
+				t.Error(err)
+			}
+
+			fp := getLocaleConfPath()
+
+			Convey("The path should be equal", func() {
+				So(fp, ShouldEqual, path.Join(tmpDir, "locale.conf"))
+			})
+		})
+
+		Convey("When user set HOME", func() {
+			tmpDir := setupLocaleConf(".config/locale.conf")
+			Reset(func() {
+				_ = os.RemoveAll(tmpDir)
+			})
+
+			err := os.Setenv("HOME", tmpDir)
+			if err != nil {
+				t.Error(err)
+			}
+
+			fp := getLocaleConfPath()
+
+			Convey("The path should be equal", func() {
+				So(fp, ShouldEqual, path.Join(tmpDir, ".config/locale.conf"))
+			})
+		})
+
+		Convey("When fallback to system level locale.conf", func() {
+			fp := getLocaleConfPath()
+
+			Convey("The path should be equal", func() {
+				So(fp, ShouldEqual, "/etc/locale.conf")
+			})
+		})
+	})
+}
+
+func TestDetectViaLocaleConf(t *testing.T) {
+	Convey("detect via locale conf", t, func() {
+		setupEnv()
+		Reset(func() {
+			setupEnv()
+		})
+
+		tmpDir := setupLocaleConf("locale.conf")
+		Reset(func() {
+			_ = os.RemoveAll(tmpDir)
+		})
+		err := os.Setenv("XDG_CONFIG_HOME", tmpDir)
+		if err != nil {
+			t.Error(err)
+		}
+
+		lang, err := detectViaLocaleConf()
+
+		Convey("The error should be nil", func() {
 			So(err, ShouldBeNil)
 		})
 		Convey("The lang should not be empty", func() {
@@ -125,10 +198,40 @@ func TestDetectViaLocale(t *testing.T) {
 	})
 }
 
+func BenchmarkLookupEnv(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		_, _ = os.LookupEnv("LANGUAGE")
+	}
+}
+
+func BenchmarkEnviron(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		_ = os.Environ()
+	}
+}
+
 var env struct {
 	Env map[string]string
 	sync.Mutex
 	sync.Once
+}
+
+func setupLocaleConf(filePath string) (dir string) {
+	confContent := `LANG=en_US.UTF-8`
+	tmpDir := "/tmp/" + time.Now().String()
+	baseDir := path.Dir(path.Join(tmpDir, filePath))
+
+	err := os.MkdirAll(baseDir, 0755)
+	if err != nil {
+		panic(err)
+	}
+
+	err = ioutil.WriteFile(path.Join(tmpDir, filePath), []byte(confContent), 0644)
+	if err != nil {
+		panic(err)
+	}
+
+	return tmpDir
 }
 
 func setupEnv() {
