@@ -6,6 +6,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v0.3.0] - 2020-06-03
+
+### Added
+
+- Add FreeBSD/OpenBSD support (#12)
+
+### Changed
+
+- unix: Detect via locale.conf instead of locale command (#14)
+
 ## [v0.2.0] - 2020-04-21
 
 ### Added
@@ -20,4 +30,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Support Linux, macOS X and Windows platforms
 - Support Detect and DetectAll
 
+[v0.3.0]: https://github.com/Xuanwo/go-locale/compare/v0.2.0...v0.3.0
 [v0.2.0]: https://github.com/Xuanwo/go-locale/compare/v0.1.0...v0.2.0
