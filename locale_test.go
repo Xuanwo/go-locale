@@ -238,3 +238,23 @@ func TestDetectViaEnvLc(t *testing.T) {
 		})
 	})
 }
+
+func TestParseEnvLc(t *testing.T) {
+	Convey("parse env lc", t, func() {
+		Convey("When input en_US.UTF-8", func() {
+			x := parseEnvLc("en_US.UTF-8")
+
+			Convey("The lang should be en_US", func() {
+				So(x, ShouldEqual, "en_US")
+			})
+		})
+
+		Convey("When input C.UTF-8", func() {
+			x := parseEnvLc("C.UTF-8")
+
+			Convey("The lang should be en_US", func() {
+				So(x, ShouldEqual, "en_US")
+			})
+		})
+	})
+}
