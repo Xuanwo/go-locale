@@ -1,4 +1,4 @@
-// +build !windows !js
+// +build !windows,!darwin,!js
 // +build !integration_test
 
 package locale

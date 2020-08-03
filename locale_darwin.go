@@ -12,7 +12,6 @@ import (
 var detectors = []detector{
 	detectViaEnvLanguage,
 	detectViaEnvLc,
-	detectViaLocaleConf,
 	detectViaUserDefaultsSystem,
 }
 
