@@ -46,7 +46,7 @@ unit_test:
 
 integration_test:
 	@echo "run integration test"
-	@go test -race -tags tests -cover -coverprofile=coverage_integration.txt -v ./...
+	@go test -race -tags integration_test -cover -coverprofile=coverage_integration.txt -v ./...
 	@go tool cover -html="coverage_integration.txt" -o "coverage_integration.html"
 	@echo "ok"
 
