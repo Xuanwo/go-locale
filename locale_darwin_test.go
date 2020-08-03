@@ -1,9 +1,10 @@
+// +build !tests
 package locale
 
 import (
 	"testing"
 
-	. "github.com/smartystreets/goconvey/convey"
+
 )
 
 func TestDetectViaUserDefaultsSystem(t *testing.T) {
