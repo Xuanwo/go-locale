@@ -1,4 +1,4 @@
-// +build !unit_test
+// +build !tests
 
 package locale
 

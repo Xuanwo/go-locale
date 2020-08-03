@@ -40,13 +40,13 @@ build: tidy check
 
 unit_test:
 	@echo "run unit test"
-	@go test -race -tags unit_test -coverprofile=coverage.txt -covermode=atomic -v ./...
+	@go test -race -coverprofile=coverage.txt -covermode=atomic -v ./...
 	@go tool cover -html="coverage.txt" -o "coverage.html"
 	@echo "ok"
 
 integration_test:
 	@echo "run integration test"
-	@go test -race -tags integration_test -v ./...
+	@go test -race -tags tests -v ./...
 	@echo "ok"
 
 tidy:
