@@ -55,7 +55,10 @@ Support all OS that Golang supported, except `android`:
 
 ### macOS X (darwin)
 
-- All check for POSIX compatible systems
+- Lookup env `LANGUAGE`
+- Lookup env `LC_ALL`
+- Lookup env `LC_MESSAGES`
+- Lookup env `LANG`
 - macOS X [User Defaults System](https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/UserDefaults/AboutPreferenceDomains/AboutPreferenceDomains.html)
 
 ## Usage
