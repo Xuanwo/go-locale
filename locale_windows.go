@@ -7,6 +7,8 @@ import (
 )
 
 var detectors = []detector{
+	detectViaEnvLanguage,
+	detectViaEnvLc,
 	detectViaRegistry,
 }
 
