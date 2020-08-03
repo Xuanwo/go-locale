@@ -36,9 +36,14 @@ Support
 
 Check order
 
+- Lookup env `LANGUAGE`
+- Lookup env `LC_ALL`
+- Lookup env `LC_MESSAGES`
+- Lookup env `LANG`
 - [Windows Registry](https://renenyffenegger.ch/notes/Windows/registry/tree/HKEY_CURRENT_USER/Control-Panel/International/index)
 
 Support
+
 
 - All windows version
 
