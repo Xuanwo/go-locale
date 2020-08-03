@@ -13,7 +13,7 @@
 Support all OS that Golang supported, except `android`:
 
 - [aix: IBM AIX operating system](https://www.ibm.com/it-infrastructure/power/os/aix)
-- android (*have on idea on this*)
+- android (*have no idea on this*)
 - [darwin: Drawin, Mac OS X](https://opensource.apple.com/)
 - [dragonfly: DragonFly BSD](https://www.dragonflybsd.org/)
 - [freebsd: FreeBSD](https://www.freebsd.org/)
