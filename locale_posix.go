@@ -1,5 +1,5 @@
-// +build darwin dragonfly freebsd linux netbsd openbsd solaris illumos
-// +build !unit_test
+// +build aix dragonfly freebsd hurd illumos linux nacl netbsd openbsd plan9 solaris zos
+// +build !integration_test
 
 package locale
 
@@ -9,6 +9,12 @@ import (
 	"path"
 	"strings"
 )
+
+var detectors = []detector{
+	detectViaEnvLanguage,
+	detectViaEnvLc,
+	detectViaLocaleConf,
+}
 
 func detectViaLocaleConf() (_ []string, err error) {
 	defer func() {

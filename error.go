@@ -1,5 +1,16 @@
 package locale
 
+import (
+	"errors"
+)
+
+var (
+	// ErrNotDetected returns while no locale detected.
+	ErrNotDetected = errors.New("not detected")
+	// ErrNotSupported means current platform or language is not supported.
+	ErrNotSupported = errors.New("not supported")
+)
+
 // Error is the error returned by locale.
 type Error struct {
 	Op  string

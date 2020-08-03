@@ -1,4 +1,4 @@
-// +build integration_test
+// +build !integration_test
 
 package locale
 

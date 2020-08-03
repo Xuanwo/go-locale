@@ -1,5 +1,5 @@
-// +build darwin dragonfly freebsd linux netbsd openbsd solaris illumos
-// +build integration_test
+// +build !windows,!darwin,!js
+// +build !integration_test
 
 package locale
 
