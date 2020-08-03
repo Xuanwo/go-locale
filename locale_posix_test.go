@@ -1,4 +1,5 @@
 // +build !windows !js
+// +build !integration_test
 
 package locale
 
