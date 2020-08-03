@@ -1,4 +1,5 @@
 // +build !tests
+
 package locale
 
 import (
