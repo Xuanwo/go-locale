@@ -1,4 +1,4 @@
-// +build aix darwin dragonfly freebsd hurd illumos linux nacl netbsd openbsd plan9 solaris zos
+// +build aix dragonfly freebsd hurd illumos linux nacl netbsd openbsd plan9 solaris zos
 // +build !unit_test
 
 package locale
