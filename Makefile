@@ -49,12 +49,6 @@ integration_test:
 	@go test -race -tags integration_test -v ./...
 	@echo "ok"
 
-generate_windows_language_code:
-	@echo "generate windows language code from windows openspecs"
-	@pushd internal/cmd/languagecode && go build . && popd
-	@./internal/cmd/languagecode/languagecode
-	@go fmt locale_windows_generated.go
-
 tidy:
 	@echo "Tidy and check the go mod files"
 	@go mod tidy && go mod verify
