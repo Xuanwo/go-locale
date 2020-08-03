@@ -5,9 +5,11 @@ package locale
 import (
 	"github.com/go-ole/go-ole"
 	"github.com/go-ole/go-ole/oleutil"
+	"golang.org/x/sys/windows/registry"
 )
 
 var detectors = []detector{
+	detectViaWinRegistry,
 	detectViaWin32OLE,
 }
 
@@ -71,5 +73,20 @@ func detectViaWin32OLE() (langs []string, err error) {
 		err = ErrNotSupported
 		return
 	}
+	return []string{lang}, nil
+}
+
+func detectViaWinRegistry() (langs []string, err error) {
+	key, err := registry.OpenKey(registry.CURRENT_USER, `Control Panel\International`, registry.QUERY_VALUE)
+	if err != nil {
+		return nil, &Error{"opening Windows registry for reading failed", err}
+	}
+	defer key.Close()
+
+	lang, _, err := key.GetStringValue("LocaleName")
+	if err != nil {
+		return nil, &Error{"reading a locale name from registry failed", err}
+	}
+
 	return []string{lang}, nil
 }
