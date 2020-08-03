@@ -36,11 +36,11 @@ Support
 
 Check order
 
-- [Win32 OLE](https://docs.microsoft.com/en-us/windows/win32/com/component-object-model--com--portal)
+- [Windows Registry](https://renenyffenegger.ch/notes/Windows/registry/tree/HKEY_CURRENT_USER/Control-Panel/International/index)
 
 Support
 
-- Windows Vista or Windows Server 2008 Later
+- All windows version
 
 ### macOS X (darwin)
 
