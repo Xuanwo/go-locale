@@ -1,22 +1,16 @@
 SHELL := /bin/bash
 
-.PHONY: all check format vet lint build test tidy
+.PHONY: all check format vet build test tidy
 
 help:
 	@echo "Please use \`make <target>\` where <target> is one of"
-	@echo "  check               to format, vet and lint "
+	@echo "  check               to format, vet "
 	@echo "  build               to create bin directory and build"
 	@echo "  generate            to generate code"
 	@echo "  unit_test           to run unit test"
 	@echo "  integration_test    to run integration test"
 
-# golint: go get -u golang.org/x/lint/golint
-tools := golint
-
-$(tools):
-	@command -v $@ >/dev/null 2>&1 || echo "$@ is not found, plese install it."
-
-check: format vet lint
+check: format vet
 
 format:
 	@echo "go fmt"
@@ -26,11 +20,6 @@ format:
 vet:
 	@echo "go vet"
 	@go vet ./...
-	@echo "ok"
-
-lint: golint
-	@echo "golint"
-	@golint ./...
 	@echo "ok"
 
 build: tidy check
