@@ -6,6 +6,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v1.0.0] - 2020-08-03
+
+### Added
+
+- Add support for all os that go support
+  - aix
+  - hurd
+  - js
+  - nacl
+  - plan9
+  - zos
+- windows: Add env support
+
+### Changed
+
+- windows: Read windows registry instead of OLE
+
 ## [v0.3.0] - 2020-06-03
 
 ### Added
@@ -30,5 +47,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Support Linux, macOS X and Windows platforms
 - Support Detect and DetectAll
 
+[v1.0.0]: https://github.com/Xuanwo/go-locale/compare/v0.3.0...v1.0.0
 [v0.3.0]: https://github.com/Xuanwo/go-locale/compare/v0.2.0...v0.3.0
 [v0.2.0]: https://github.com/Xuanwo/go-locale/compare/v0.1.0...v0.2.0

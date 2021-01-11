@@ -6,13 +6,6 @@ import (
 	"golang.org/x/text/language"
 )
 
-var (
-	// ErrNotDetected returns while no locale detected.
-	ErrNotDetected = errors.New("not detected")
-	// ErrNotSupported means current platform or language is not supported.
-	ErrNotSupported = errors.New("not supported")
-)
-
 // Detect will detect current env's language.
 func Detect() (tag language.Tag, err error) {
 	tags, err := DetectAll()
@@ -36,6 +29,8 @@ func DetectAll() (tags []language.Tag, err error) {
 	return
 }
 
+type detector func() ([]string, error)
+
 func detect() (lang []string, err error) {
 	for _, fn := range detectors {
 		lang, err = fn()
@@ -49,5 +44,3 @@ func detect() (lang []string, err error) {
 	}
 	return nil, &Error{"detect", ErrNotDetected}
 }
-
-type detector func() ([]string, error)

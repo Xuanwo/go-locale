@@ -1,14 +1,43 @@
-// +build unit_test
+// +build integration_test
 
 package locale
 
 import (
 	"errors"
+	"sync"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 	"golang.org/x/text/language"
 )
+
+var mockLang mock
+
+type mock struct {
+	s   []string
+	err error
+
+	sync.Mutex
+}
+
+func (l *mock) get() ([]string, error) {
+	l.Lock()
+	defer l.Unlock()
+
+	return l.s, l.err
+}
+
+func (l *mock) set(s []string, e error) {
+	l.Lock()
+	defer l.Unlock()
+
+	l.s = s
+	l.err = e
+}
+
+var detectors = []detector{
+	mockLang.get,
+}
 
 func TestInternalDetect(t *testing.T) {
 	teseerr := errors.New("test error")

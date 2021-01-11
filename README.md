@@ -10,9 +10,26 @@
 
 ## OS Support
 
-### POSIX Compatible Systems
+Support all OS that Golang supported, except `android`:
 
-Check order
+- [aix: IBM AIX operating system](https://www.ibm.com/it-infrastructure/power/os/aix)
+- android (*have no idea on this*)
+- [darwin: Drawin, Mac OS X](https://opensource.apple.com/)
+- [dragonfly: DragonFly BSD](https://www.dragonflybsd.org/)
+- [freebsd: FreeBSD](https://www.freebsd.org/)
+- [hurd: GNU Hurd](https://en.wikipedia.org/wiki/GNU_Hurd)
+- [illumos](https://illumos.org/)
+- [js: JavaScript runtime, WebAssembly](https://webassembly.org/)
+- Linux: Ubuntu, CentOS, RHEL, Archlinux...
+- [nacl: Native Client](https://developer.chrome.com/native-client)
+- [netbsd: NetBSD](https://www.netbsd.org/)
+- [openbsd: OpenBSD](https://www.openbsd.org/)
+- [plan9: Plan 9 from Bell Labs](https://9p.io/plan9/)
+- [solaris: Solaris](https://www.oracle.com/solaris)
+- [windows: Windows](https://www.microsoft.com/en-us/windows/)
+- [zos: z/OS](https://www.ibm.com/it-infrastructure/z/zos)
+
+### POSIX Compatible Systems
 
 - Lookup env `LANGUAGE`
 - Lookup env `LC_ALL`
@@ -22,36 +39,27 @@ Check order
 - Read file `$HOME/.config/locale.conf`
 - Read file `/etc/locale.conf`
 
-Support
+### Js
 
-- Linux: Ubuntu, CentOS, RHEL, Archlinux...
-- [DragonFly BSD](https://www.dragonflybsd.org/)
-- [FreeBSD](https://www.freebsd.org/)
-- [illumos](https://illumos.org/)
-- [NetBSD](https://www.netbsd.org/)
-- [OpenBSD](https://www.openbsd.org/)
-- [Solaris](https://www.oracle.com/solaris)
+- Lookup env `LANGUAGE`
+- Lookup env `LC_ALL`
 
 ### Windows
 
-Check order
+- Lookup env `LANGUAGE`
+- Lookup env `LC_ALL`
+- Lookup env `LC_MESSAGES`
+- Lookup env `LANG`
+- [Windows Registry](https://renenyffenegger.ch/notes/Windows/registry/tree/HKEY_CURRENT_USER/Control-Panel/International/index)
 
-- [Win32 OLE](https://docs.microsoft.com/en-us/windows/win32/com/component-object-model--com--portal)
-
-Support
-
-- Windows Vista or Windows Server 2008 Later
 
 ### macOS X (darwin)
 
-Check order
-
-- All check for POSIX compatible systems
+- Lookup env `LANGUAGE`
+- Lookup env `LC_ALL`
+- Lookup env `LC_MESSAGES`
+- Lookup env `LANG`
 - macOS X [User Defaults System](https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/UserDefaults/AboutPreferenceDomains/AboutPreferenceDomains.html)
-
-Support
-
-- All macOS X version
 
 ## Usage
 
