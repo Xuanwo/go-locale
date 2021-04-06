@@ -4,6 +4,7 @@
 [![Go Doc](https://pkg.go.dev/badge/github.com/Xuanwo/go-locale)](https://pkg.go.dev/github.com/Xuanwo/go-locale)
 [![Go Report Card](https://goreportcard.com/badge/github.com/Xuanwo/go-locale)](https://goreportcard.com/report/github.com/Xuanwo/go-locale)
 [![License](https://img.shields.io/badge/license-apache%20v2-blue.svg)](https://github.com/Xuanwo/go-locale/blob/master/LICENSE)
+[![go locale](https://img.shields.io/matrix/xuanwo_go-locale:matrix.org.svg?label=%23xuanwo_go-locale%3Amatrix.org&logo=matrix&server_fqdn=matrix.org)](https://matrix.to/#/#xuanwo_go-locale:matrix.org)
 
 `go-locale` is a Golang lib for cross platform locale detection.
 
