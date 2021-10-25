@@ -61,10 +61,11 @@ func parseDefaultsSystemAppleLocale(domain string) ([]string, error) {
 		return nil, &Error{"detect via user defaults system", err}
 	}
 
-	if out.Len() == 0 {
+	content := strings.TrimSpace(out.String())
+	if len(content) == 0 {
 		return nil, &Error{"detect via defaults system", ErrNotDetected}
 	}
-	return []string{out.String()}, nil
+	return []string{content}, nil
 }
 
 // parseDefaultsSystemAppleLanguages will parse the AppleLanguages output.
