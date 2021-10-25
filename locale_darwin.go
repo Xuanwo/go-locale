@@ -3,6 +3,7 @@ package locale
 import (
 	"bufio"
 	"bytes"
+	"os"
 	"os/exec"
 	"strings"
 )
@@ -18,6 +19,14 @@ var detectors = []detector{
 // ref: https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/UserDefaults/AboutPreferenceDomains/AboutPreferenceDomains.html
 func detectViaUserDefaultsSystem() ([]string, error) {
 	cmd := exec.Command("defaults", "read", "NSGlobalDomain", "AppleLanguages")
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	err := cmd.Run()
+	if err != nil {
+		return nil, &Error{"detect via user defaults system", err}
+	}
+
+	cmd = exec.Command("defaults", "read", "NSGlobalDomain", "AppleLanguages")
 
 	var out bytes.Buffer
 	cmd.Stdout = &out
@@ -48,7 +57,7 @@ func detectViaUserDefaultsSystem() ([]string, error) {
 	//    hu,
 	//    tr
 	// )
-	err := cmd.Run()
+	err = cmd.Run()
 	if err != nil {
 		return nil, &Error{"detect via user defaults system", err}
 	}
