@@ -27,16 +27,10 @@ build: tidy check
 	@go build ./...
 	@echo "ok"
 
-unit_test:
+test:
 	@echo "run unit test"
-	@go test -race -cover -coverprofile=coverage_unit.txt -v ./...
-	@go tool cover -html="coverage_unit.txt" -o "coverage_unit.html"
-	@echo "ok"
-
-integration_test:
-	@echo "run integration test"
-	@go test -race -tags integration_test -cover -coverprofile=coverage_integration.txt -v ./...
-	@go tool cover -html="coverage_integration.txt" -o "coverage_integration.html"
+	@go test -race -cover -coverprofile=coverage.txt -v ./...
+	@go tool cover -html="coverage.txt" -o "coverage.html"
 	@echo "ok"
 
 tidy:

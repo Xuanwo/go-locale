@@ -1,5 +1,3 @@
-// +build !integration_test
-
 package locale
 
 import (
@@ -28,6 +26,7 @@ func TestDetectViaEnvLanguage(t *testing.T) {
 
 			lang, err := detectViaEnvLanguage()
 
+			t.Logf("langs: %v", lang)
 			Convey("The error should not be nil", func() {
 				So(err, ShouldBeNil)
 			})
@@ -44,6 +43,7 @@ func TestDetectViaEnvLanguage(t *testing.T) {
 
 			lang, err := detectViaEnvLanguage()
 
+			t.Logf("langs: %v", lang)
 			Convey("The error should not be nil", func() {
 				So(err, ShouldBeNil)
 			})
@@ -60,6 +60,7 @@ func TestDetectViaEnvLanguage(t *testing.T) {
 
 			lang, err := detectViaEnvLanguage()
 
+			t.Logf("langs: %v", lang)
 			Convey("The error should be ErrNotDetected", func() {
 				So(errors.Is(err, ErrNotDetected), ShouldBeTrue)
 			})
@@ -88,6 +89,7 @@ func TestDetectViaEnvLc(t *testing.T) {
 
 			lang, err := detectViaEnvLc()
 
+			t.Logf("langs: %v", lang)
 			Convey("The error should not be nil", func() {
 				So(err, ShouldBeNil)
 			})

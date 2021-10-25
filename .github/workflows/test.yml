@@ -1,16 +1,16 @@
-name: "Unit Test"
+name: "Test"
 
-on: [push,pull_request]
+on: [ push,pull_request ]
 
 jobs:
-  unit_test:
-    name: Unit Test
+  test:
+    name: Test
     runs-on: ${{ matrix.os }}
 
     strategy:
       matrix:
         go: [ "1.14", "1.15", "1.16", "1.17" ]
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [ ubuntu-latest, windows-latest, macos-latest ]
 
     steps:
       - name: Set up Go 1.x
@@ -26,6 +26,3 @@ jobs:
 
       - name: Test
         run: make test
-
-      - name: Integration Test
-        run: make integration_test
