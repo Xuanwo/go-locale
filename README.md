@@ -5,7 +5,7 @@
 [![License](https://img.shields.io/badge/license-apache%20v2-blue.svg)](https://github.com/Xuanwo/go-locale/blob/master/LICENSE)
 [![go locale](https://img.shields.io/matrix/xuanwo_go-locale:matrix.org.svg?label=%23xuanwo_go-locale%3Amatrix.org&logo=matrix&server_fqdn=matrix.org)](https://matrix.to/#/#xuanwo_go-locale:matrix.org)
 
-`go-locale` is a Golang lib for cross platform locale detection.
+`go-locale` is a Golang lib for cross-platform locale detection.
 
 ## OS Support
 
@@ -51,7 +51,6 @@ Support all OS that Golang supported, except `android`:
 - Lookup env `LANG`
 - [Windows Registry](https://renenyffenegger.ch/notes/Windows/registry/tree/HKEY_CURRENT_USER/Control-Panel/International/index)
 
-
 ### macOS X (darwin)
 
 - Lookup env `LANGUAGE`
@@ -59,6 +58,10 @@ Support all OS that Golang supported, except `android`:
 - Lookup env `LC_MESSAGES`
 - Lookup env `LANG`
 - macOS X [User Defaults System](https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/UserDefaults/AboutPreferenceDomains/AboutPreferenceDomains.html)
+  - Lookup user AppleLocale
+  - Lookup user AppleLanguages
+  - Lookup global AppleLocale
+  - Lookup global AppleLanguages
 
 ## Usage
 
