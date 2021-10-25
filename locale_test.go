@@ -125,6 +125,11 @@ func TestDetect(t *testing.T) {
 	}
 }
 
+func TestX(t *testing.T) {
+	tx := language.Make("English")
+	t.Logf("%s", tx)
+}
+
 func TestDetectAll(t *testing.T) {
 	detectors = []detector{mockLang.get}
 

@@ -8,8 +8,9 @@ import (
 
 func TestDetectViaUserDefaultsSystem(t *testing.T) {
 	Convey("detect via user defaults system", t, func() {
-		langs, err := detectViaUserDefaultsSystem()
+		langs, err := detectViaDefaultsSystem()
 
+		t.Logf("langs: %v", langs)
 		Convey("The error should not be nil", func() {
 			So(err, ShouldBeNil)
 		})
