@@ -18,7 +18,7 @@ var detectors = []detector{
 //
 // ref: https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/UserDefaults/AboutPreferenceDomains/AboutPreferenceDomains.html
 func detectViaUserDefaultsSystem() ([]string, error) {
-	cmd := exec.Command("defaults", "read", "NSGlobalDomain", "AppleLanguages")
+	cmd := exec.Command("defaults", "read", "-g", "AppleLanguages")
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	err := cmd.Run()
@@ -26,7 +26,7 @@ func detectViaUserDefaultsSystem() ([]string, error) {
 		return nil, &Error{"detect via user defaults system", err}
 	}
 
-	cmd = exec.Command("defaults", "read", "NSGlobalDomain", "AppleLanguages")
+	cmd = exec.Command("defaults", "read", "-g", "AppleLanguages")
 
 	var out bytes.Buffer
 	cmd.Stdout = &out
