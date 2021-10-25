@@ -1,5 +1,3 @@
-// +build integration_test
-
 package locale
 
 import (
@@ -35,11 +33,9 @@ func (l *mock) set(s []string, e error) {
 	l.err = e
 }
 
-var detectors = []detector{
-	mockLang.get,
-}
-
 func TestInternalDetect(t *testing.T) {
+	detectors = []detector{mockLang.get}
+
 	teseerr := errors.New("test error")
 	tests := []struct {
 		name         string
@@ -88,6 +84,8 @@ func TestInternalDetect(t *testing.T) {
 }
 
 func TestDetect(t *testing.T) {
+	detectors = []detector{mockLang.get}
+
 	tests := []struct {
 		name        string
 		mockString  []string
@@ -128,6 +126,8 @@ func TestDetect(t *testing.T) {
 }
 
 func TestDetectAll(t *testing.T) {
+	detectors = []detector{mockLang.get}
+
 	tests := []struct {
 		name        string
 		mockString  []string
