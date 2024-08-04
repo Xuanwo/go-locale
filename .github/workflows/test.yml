@@ -1,6 +1,15 @@
 name: "Test"
 
-on: [ push, pull_request, workflow_dispatch ]
+on: 
+  push:
+    branches:
+      - main
+    tags:
+      - '*'
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
 
 jobs:
   test:
