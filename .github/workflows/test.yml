@@ -3,12 +3,12 @@ name: "Test"
 on: 
   push:
     branches:
-      - main
+      - master
     tags:
       - '*'
   pull_request:
     branches:
-      - main
+      - master
   workflow_dispatch:
 
 concurrency:
