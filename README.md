@@ -1,6 +1,6 @@
 # go-locale
 
-[![Build Status](https://github.com/Xuanwo/go-locale/workflows/Test/badge.svg?branch=master)](https://github.com/Xuanwo/go-locale/actions?query=workflow%3A%22Test%22)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/Xuanwo/go-locale/test.yml?branch=master)](https://github.com/Xuanwo/go-locale/actions?query=branch%3master)
 [![Go Doc](https://pkg.go.dev/badge/github.com/Xuanwo/go-locale)](https://pkg.go.dev/github.com/Xuanwo/go-locale)
 [![Go Ver](https://img.shields.io/github/go-mod/go-version/Xuanwo/go-locale)](https://github.com/Xuanwo/go-locale/blob/master/go.mod)
 [![License](https://img.shields.io/badge/license-apache%20v2-blue.svg)](https://github.com/Xuanwo/go-locale/blob/master/LICENSE)
