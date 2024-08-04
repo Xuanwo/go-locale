@@ -6,6 +6,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v1.1.1] - 2024-08-04
+
+### Changed
+
+* refactor: Remove convery and assert by @Xuanwo in https://github.com/Xuanwo/go-locale/pull/75
+
+### Fixed
+
+* fix: GH Actions' errors and security issues. [Drop Go 1.14-1.16 support] by @KEINOS in https://github.com/Xuanwo/go-locale/pull/64
+
+### Docs
+
+* docs: Update README.md by @Xuanwo in https://github.com/Xuanwo/go-locale/pull/72
+
+### Dependencies
+
+* build(deps): Bump github.com/smartystreets/goconvey from 1.6.7 to 1.7.2 by @dependabot in https://github.com/Xuanwo/go-locale/pull/40
+* build(deps): Bump github.com/stretchr/testify from 1.7.0 to 1.7.1 by @dependabot in https://github.com/Xuanwo/go-locale/pull/41
+* build(deps): Bump github.com/stretchr/testify from 1.7.1 to 1.7.5 by @dependabot in https://github.com/Xuanwo/go-locale/pull/45
+* build(deps): Bump github.com/stretchr/testify from 1.7.5 to 1.8.0 by @dependabot in https://github.com/Xuanwo/go-locale/pull/52
+* build(deps): Bump golang.org/x/sys from 0.7.0 to 0.22.0 by @dependabot in https://github.com/Xuanwo/go-locale/pull/69
+* build(deps): Bump github.com/stretchr/testify from 1.8.2 to 1.9.0 by @dependabot in https://github.com/Xuanwo/go-locale/pull/68
+* build(deps): Bump golang.org/x/text from 0.9.0 to 0.16.0 by @dependabot in https://github.com/Xuanwo/go-locale/pull/65
+* chore: upgraded golang.org/x/sys by @sumit-tembe in https://github.com/Xuanwo/go-locale/pull/53
+
 ## [v1.1.0] - 2021-10-25
 
 ### Added
