@@ -6,7 +6,7 @@ require (
 	github.com/smartystreets/goconvey v1.7.2
 	github.com/stretchr/testify v1.9.0
 	golang.org/x/sys v0.22.0
-	golang.org/x/text v0.9.0
+	golang.org/x/text v0.16.0
 )
 
 require (
