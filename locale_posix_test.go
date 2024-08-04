@@ -7,95 +7,71 @@ import (
 	"os"
 	"path"
 	"testing"
-
-	. "github.com/smartystreets/goconvey/convey"
 )
 
-func TestGetLocaleConfPath(t *testing.T) {
-	Convey("get locale conf path", t, func() {
-		// Make sure env has clear before current test.
-		setupEnv()
+func TestXDGConfigHome(t *testing.T) {
+	setupEnv()
+	tmpDir := setupLocaleConf("locale.conf")
+	defer os.RemoveAll(tmpDir)
 
-		Reset(func() {
-			// Reset all env after every Convey.
-			setupEnv()
-		})
+	err := os.Setenv("XDG_CONFIG_HOME", tmpDir)
+	if err != nil {
+		t.Fatal(err)
+	}
 
-		Convey("When user set XDG_CONFIG_HOME", func() {
-			tmpDir := setupLocaleConf("locale.conf")
-			Reset(func() {
-				_ = os.RemoveAll(tmpDir)
-			})
+	fp := getLocaleConfPath()
+	expected := path.Join(tmpDir, "locale.conf")
+	if fp != expected {
+		t.Errorf("Expected path %s, got %s", expected, fp)
+	}
+}
 
-			err := os.Setenv("XDG_CONFIG_HOME", tmpDir)
-			if err != nil {
-				t.Error(err)
-			}
+func TestHOME(t *testing.T) {
+	setupEnv()
+	tmpDir := setupLocaleConf(".config/locale.conf")
+	defer os.RemoveAll(tmpDir)
 
-			fp := getLocaleConfPath()
+	err := os.Setenv("HOME", tmpDir)
+	if err != nil {
+		t.Fatal(err)
+	}
 
-			Convey("The path should be equal", func() {
-				So(fp, ShouldEqual, path.Join(tmpDir, "locale.conf"))
-			})
-		})
+	fp := getLocaleConfPath()
+	expected := path.Join(tmpDir, ".config/locale.conf")
+	if fp != expected {
+		t.Errorf("Expected path %s, got %s", expected, fp)
+	}
+}
 
-		Convey("When user set HOME", func() {
-			tmpDir := setupLocaleConf(".config/locale.conf")
-			Reset(func() {
-				_ = os.RemoveAll(tmpDir)
-			})
+func TestFallbackToSystem(t *testing.T) {
+	setupEnv()
+	var localeExist bool
+	_, err := os.Stat("/etc/locale.conf")
+	if err == nil {
+		localeExist = true
+	}
 
-			err := os.Setenv("HOME", tmpDir)
-			if err != nil {
-				t.Error(err)
-			}
-
-			fp := getLocaleConfPath()
-
-			Convey("The path should be equal", func() {
-				So(fp, ShouldEqual, path.Join(tmpDir, ".config/locale.conf"))
-			})
-		})
-
-		Convey("When fallback to system level locale.conf", func() {
-			var localeExist bool
-			_, err := os.Stat("/etc/locale.conf")
-			if err == nil {
-				localeExist = true
-			}
-
-			fp := getLocaleConfPath()
-
-			Convey("The path should be equal", func() {
-				So(fp == "/etc/locale.conf", ShouldEqual, localeExist)
-			})
-		})
-	})
+	fp := getLocaleConfPath()
+	if (fp == "/etc/locale.conf") != localeExist {
+		t.Errorf("Expected path to be /etc/locale.conf: %v, got: %s", localeExist, fp)
+	}
 }
 
 func TestDetectViaLocaleConf(t *testing.T) {
-	Convey("detect via locale conf", t, func() {
-		setupEnv()
-		Reset(func() {
-			setupEnv()
-		})
+	setupEnv()
+	tmpDir := setupLocaleConf("locale.conf")
+	defer os.RemoveAll(tmpDir)
 
-		tmpDir := setupLocaleConf("locale.conf")
-		Reset(func() {
-			_ = os.RemoveAll(tmpDir)
-		})
-		err := os.Setenv("XDG_CONFIG_HOME", tmpDir)
-		if err != nil {
-			t.Error(err)
-		}
+	err := os.Setenv("XDG_CONFIG_HOME", tmpDir)
+	if err != nil {
+		t.Fatal(err)
+	}
 
-		lang, err := detectViaLocaleConf()
-
-		Convey("The error should be nil", func() {
-			So(err, ShouldBeNil)
-		})
-		Convey("The lang should not be empty", func() {
-			So(lang, ShouldNotBeEmpty)
-		})
-	})
+	lang, err := detectViaLocaleConf()
+	if err != nil {
+		t.Errorf("Expected no error, got %v", err)
+	}
+	if len(lang) == 0 {
+		t.Error("Expected non-empty lang, got empty string")
+	}
 }
