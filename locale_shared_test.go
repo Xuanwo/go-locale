@@ -3,130 +3,98 @@ package locale
 import (
 	"errors"
 	"os"
+	"reflect"
 	"testing"
-
-	. "github.com/smartystreets/goconvey/convey"
 )
 
 func TestDetectViaEnvLanguage(t *testing.T) {
-	Convey("detect via env language", t, func() {
-		// Make sure env has clear before current test.
-		setupEnv()
+	tests := []struct {
+		name     string
+		envValue string
+		want     []string
+		wantErr  error
+	}{
+		{"Valid single value", "en_US", []string{"en_US"}, nil},
+		{"Multiple values", "en_US:zh_CN", []string{"en_US", "zh_CN"}, nil},
+		{"Empty value", "", nil, ErrNotDetected},
+	}
 
-		Reset(func() {
-			// Reset all env after every Convey.
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
 			setupEnv()
-		})
+			defer setupEnv()
 
-		Convey("When LANGUAGE has valid value", func() {
-			err := os.Setenv("LANGUAGE", "en_US")
+			err := os.Setenv("LANGUAGE", tt.envValue)
 			if err != nil {
-				t.Error(err)
+				t.Fatal(err)
 			}
 
-			lang, err := detectViaEnvLanguage()
+			got, err := detectViaEnvLanguage()
+			t.Logf("langs: %v", got)
 
-			t.Logf("langs: %v", lang)
-			Convey("The error should not be nil", func() {
-				So(err, ShouldBeNil)
-			})
-			Convey("The lang should not be equal", func() {
-				So(lang, ShouldResemble, []string{"en_US"})
-			})
-		})
-
-		Convey("When LANGUAGE has multiple value", func() {
-			err := os.Setenv("LANGUAGE", "en_US:zh_CN")
-			if err != nil {
-				t.Error(err)
+			if !errors.Is(err, tt.wantErr) {
+				t.Errorf("detectViaEnvLanguage() error = %v, wantErr %v", err, tt.wantErr)
 			}
-
-			lang, err := detectViaEnvLanguage()
-
-			t.Logf("langs: %v", lang)
-			Convey("The error should not be nil", func() {
-				So(err, ShouldBeNil)
-			})
-			Convey("The lang should not be equal", func() {
-				So(lang, ShouldResemble, []string{"en_US", "zh_CN"})
-			})
-		})
-
-		Convey("When LANGUAGE is empty", func() {
-			err := os.Setenv("LANGUAGE", "")
-			if err != nil {
-				t.Error(err)
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("detectViaEnvLanguage() = %v, want %v", got, tt.want)
 			}
-
-			lang, err := detectViaEnvLanguage()
-
-			t.Logf("langs: %v", lang)
-			Convey("The error should be ErrNotDetected", func() {
-				So(errors.Is(err, ErrNotDetected), ShouldBeTrue)
-			})
-			Convey("The lang should be empty", func() {
-				So(lang, ShouldBeEmpty)
-			})
 		})
-	})
+	}
 }
 
 func TestDetectViaEnvLc(t *testing.T) {
-	Convey("detect via env language", t, func() {
-		// Make sure env has clear before current test.
-		setupEnv()
+	tests := []struct {
+		name    string
+		setEnv  bool
+		envKey  string
+		envVal  string
+		want    []string
+		wantErr error
+	}{
+		{"LC_ALL set", true, "LC_ALL", "en_US.UTF-8", []string{"en_US"}, nil},
+		{"No LC env set", false, "", "", nil, ErrNotDetected},
+	}
 
-		Reset(func() {
-			// Reset all env after every Convey.
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
 			setupEnv()
-		})
+			defer setupEnv()
 
-		Convey("When LC_ALL has been set", func() {
-			err := os.Setenv("LC_ALL", "en_US.UTF-8")
-			if err != nil {
-				t.Error(err)
+			if tt.setEnv {
+				err := os.Setenv(tt.envKey, tt.envVal)
+				if err != nil {
+					t.Fatal(err)
+				}
 			}
 
-			lang, err := detectViaEnvLc()
+			got, err := detectViaEnvLc()
+			t.Logf("langs: %v", got)
 
-			t.Logf("langs: %v", lang)
-			Convey("The error should not be nil", func() {
-				So(err, ShouldBeNil)
-			})
-			Convey("The lang should not be equal", func() {
-				So(lang, ShouldResemble, []string{"en_US"})
-			})
+			if !errors.Is(err, tt.wantErr) {
+				t.Errorf("detectViaEnvLc() error = %v, wantErr %v", err, tt.wantErr)
+			}
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("detectViaEnvLc() = %v, want %v", got, tt.want)
+			}
 		})
-
-		Convey("When no LC env has been set", func() {
-			lang, err := detectViaEnvLc()
-
-			Convey("The error should be ErrNotDetected", func() {
-				So(errors.Is(err, ErrNotDetected), ShouldBeTrue)
-			})
-			Convey("The lang should be empty", func() {
-				So(lang, ShouldBeEmpty)
-			})
-		})
-	})
+	}
 }
 
 func TestParseEnvLc(t *testing.T) {
-	Convey("parse env lc", t, func() {
-		Convey("When input en_US.UTF-8", func() {
-			x := parseEnvLc("en_US.UTF-8")
+	tests := []struct {
+		name  string
+		input string
+		want  string
+	}{
+		{"en_US.UTF-8", "en_US.UTF-8", "en_US"},
+		{"C.UTF-8", "C.UTF-8", "en_US"},
+	}
 
-			Convey("The lang should be en_US", func() {
-				So(x, ShouldEqual, "en_US")
-			})
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := parseEnvLc(tt.input); got != tt.want {
+				t.Errorf("parseEnvLc() = %v, want %v", got, tt.want)
+			}
 		})
-
-		Convey("When input C.UTF-8", func() {
-			x := parseEnvLc("C.UTF-8")
-
-			Convey("The lang should be en_US", func() {
-				So(x, ShouldEqual, "en_US")
-			})
-		})
-	})
+	}
 }

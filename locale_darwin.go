@@ -22,8 +22,8 @@ var detectors = []detector{
 //   - global AppleLanguages
 //
 // ref:
-//  - Apple Developer Guide: https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/UserDefaults/AboutPreferenceDomains/AboutPreferenceDomains.html
-//  - Homebrew: https://github.com/Homebrew/brew/pull/7940
+//   - Apple Developer Guide: https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/UserDefaults/AboutPreferenceDomains/AboutPreferenceDomains.html
+//   - Homebrew: https://github.com/Homebrew/brew/pull/7940
 func detectViaDefaultsSystem() ([]string, error) {
 	// Read user's apple locale setting.
 	m, err := parseDefaultsSystemAppleLocale("-g")
@@ -73,28 +73,30 @@ func parseDefaultsSystemAppleLocale(domain string) ([]string, error) {
 // Output should be like:
 //
 // (
-//    en,
-//    ja,
-//    fr,
-//    de,
-//    es,
-//    it,
-//    pt,
-//    "pt-PT",
-//    nl,
-//    sv,
-//    nb,
-//    da,
-//    fi,
-//    ru,
-//    pl,
-//    "zh-Hans",
-//    "zh-Hant",
-//    ko,
-//    ar,
-//    cs,
-//    hu,
-//    tr
+//
+//	en,
+//	ja,
+//	fr,
+//	de,
+//	es,
+//	it,
+//	pt,
+//	"pt-PT",
+//	nl,
+//	sv,
+//	nb,
+//	da,
+//	fi,
+//	ru,
+//	pl,
+//	"zh-Hans",
+//	"zh-Hant",
+//	ko,
+//	ar,
+//	cs,
+//	hu,
+//	tr
+//
 // )
 func parseDefaultsSystemAppleLanguages(domain string) ([]string, error) {
 	cmd := exec.Command("defaults", "read", domain, "AppleLanguages")

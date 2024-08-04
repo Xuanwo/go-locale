@@ -2,10 +2,10 @@ package locale
 
 import (
 	"errors"
+	"reflect"
 	"sync"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
 	"golang.org/x/text/language"
 )
 
@@ -36,7 +36,7 @@ func (l *mock) set(s []string, e error) {
 func TestInternalDetect(t *testing.T) {
 	detectors = []detector{mockLang.get}
 
-	teseerr := errors.New("test error")
+	testErr := errors.New("test error")
 	tests := []struct {
 		name         string
 		mockString   []string
@@ -44,27 +44,9 @@ func TestInternalDetect(t *testing.T) {
 		expectString []string
 		expectError  error
 	}{
-		{
-			"normal",
-			[]string{"en_US"},
-			nil,
-			[]string{"en_US"},
-			nil,
-		},
-		{
-			"not detected",
-			[]string(nil),
-			ErrNotDetected,
-			[]string(nil),
-			ErrNotDetected,
-		},
-		{
-			"not detected",
-			[]string(nil),
-			teseerr,
-			[]string(nil),
-			teseerr,
-		},
+		{"normal", []string{"en_US"}, nil, []string{"en_US"}, nil},
+		{"not detected", nil, ErrNotDetected, nil, ErrNotDetected},
+		{"other error", nil, testErr, nil, testErr},
 	}
 
 	for _, tt := range tests {
@@ -72,12 +54,11 @@ func TestInternalDetect(t *testing.T) {
 			mockLang.set(tt.mockString, tt.mockError)
 
 			lang, err := detect()
-			if tt.expectError != nil {
-				assert.True(t, errors.Is(err, tt.expectError))
-				assert.Empty(t, lang)
-			} else {
-				assert.Nil(t, err)
-				assert.EqualValues(t, tt.expectString, lang)
+			if !errors.Is(err, tt.expectError) {
+				t.Errorf("detect() error = %v, expectError %v", err, tt.expectError)
+			}
+			if !reflect.DeepEqual(lang, tt.expectString) {
+				t.Errorf("detect() = %v, want %v", lang, tt.expectString)
 			}
 		})
 	}
@@ -93,20 +74,8 @@ func TestDetect(t *testing.T) {
 		expectLang  language.Tag
 		expectError error
 	}{
-		{
-			"normal",
-			[]string{"en-US"},
-			nil,
-			language.AmericanEnglish,
-			nil,
-		},
-		{
-			"not detected",
-			[]string(nil),
-			ErrNotDetected,
-			language.Und,
-			ErrNotDetected,
-		},
+		{"normal", []string{"en-US"}, nil, language.AmericanEnglish, nil},
+		{"not detected", nil, ErrNotDetected, language.Und, ErrNotDetected},
 	}
 
 	for _, tt := range tests {
@@ -114,12 +83,11 @@ func TestDetect(t *testing.T) {
 			mockLang.set(tt.mockString, tt.mockError)
 
 			lang, err := Detect()
-			if tt.expectError != nil {
-				assert.True(t, errors.Is(err, tt.expectError))
-				assert.Empty(t, lang)
-			} else {
-				assert.Nil(t, err)
-				assert.Equal(t, tt.expectLang, lang)
+			if !errors.Is(err, tt.expectError) {
+				t.Errorf("Detect() error = %v, expectError %v", err, tt.expectError)
+			}
+			if lang != tt.expectLang {
+				t.Errorf("Detect() = %v, want %v", lang, tt.expectLang)
 			}
 		})
 	}
@@ -135,20 +103,8 @@ func TestDetectAll(t *testing.T) {
 		expectLang  []language.Tag
 		expectError error
 	}{
-		{
-			"normal",
-			[]string{"en-US"},
-			nil,
-			[]language.Tag{language.AmericanEnglish},
-			nil,
-		},
-		{
-			"not detected",
-			[]string(nil),
-			ErrNotDetected,
-			[]language.Tag(nil),
-			ErrNotDetected,
-		},
+		{"normal", []string{"en-US"}, nil, []language.Tag{language.AmericanEnglish}, nil},
+		{"not detected", nil, ErrNotDetected, nil, ErrNotDetected},
 	}
 
 	for _, tt := range tests {
@@ -156,12 +112,11 @@ func TestDetectAll(t *testing.T) {
 			mockLang.set(tt.mockString, tt.mockError)
 
 			lang, err := DetectAll()
-			if tt.expectError != nil {
-				assert.True(t, errors.Is(err, tt.expectError))
-				assert.Empty(t, lang)
-			} else {
-				assert.Nil(t, err)
-				assert.Equal(t, tt.expectLang, lang)
+			if !errors.Is(err, tt.expectError) {
+				t.Errorf("DetectAll() error = %v, expectError %v", err, tt.expectError)
+			}
+			if !reflect.DeepEqual(lang, tt.expectLang) {
+				t.Errorf("DetectAll() = %v, want %v", lang, tt.expectLang)
 			}
 		})
 	}

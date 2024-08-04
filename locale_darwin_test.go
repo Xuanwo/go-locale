@@ -2,20 +2,16 @@ package locale
 
 import (
 	"testing"
-
-	. "github.com/smartystreets/goconvey/convey"
 )
 
 func TestDetectViaUserDefaultsSystem(t *testing.T) {
-	Convey("detect via user defaults system", t, func() {
-		langs, err := detectViaDefaultsSystem()
+	langs, err := detectViaDefaultsSystem()
 
-		t.Logf("langs: %v", langs)
-		Convey("The error should not be nil", func() {
-			So(err, ShouldBeNil)
-		})
-		Convey("The langs should not be empty", func() {
-			So(langs, ShouldNotBeEmpty)
-		})
-	})
+	t.Logf("langs: %v", langs)
+	if err != nil {
+		t.Errorf("Expected nil error, got: %v", err)
+	}
+	if len(langs) == 0 {
+		t.Error("Expected non-empty langs, got empty slice")
+	}
 }
