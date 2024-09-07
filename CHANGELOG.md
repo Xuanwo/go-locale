@@ -4,7 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [v1.1.2] - 2024-09-07
+
+### Changed
+
+* build(deps): Bump golang.org/x/sys from 0.22.0 to 0.23.0 by @dependabot in https://github.com/Xuanwo/go-locale/pull/78
+* build(deps): Bump golang.org/x/text from 0.16.0 to 0.17.0 by @dependabot in https://github.com/Xuanwo/go-locale/pull/79
+* build(deps): Bump golang.org/x/sys from 0.23.0 to 0.24.0 by @dependabot in https://github.com/Xuanwo/go-locale/pull/80
+* build(deps): Bump golang.org/x/text from 0.17.0 to 0.18.0 by @dependabot in https://github.com/Xuanwo/go-locale/pull/82
+* build(deps): Bump golang.org/x/sys from 0.24.0 to 0.25.0 by @dependabot in https://github.com/Xuanwo/go-locale/pull/81
 
 ## [v1.1.1] - 2024-08-04
 
@@ -93,6 +101,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Support Linux, macOS X and Windows platforms
 - Support Detect and DetectAll
 
+[v1.1.2]: https://github.com/Xuanwo/go-locale/compare/v1.1.1...v1.1.2
+[v1.1.1]: https://github.com/Xuanwo/go-locale/compare/v1.1.0...v1.1.1
 [v1.1.0]: https://github.com/Xuanwo/go-locale/compare/v1.0.0...v1.1.0
 [v1.0.0]: https://github.com/Xuanwo/go-locale/compare/v0.3.0...v1.0.0
 [v0.3.0]: https://github.com/Xuanwo/go-locale/compare/v0.2.0...v0.3.0
