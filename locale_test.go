@@ -75,6 +75,7 @@ func TestDetect(t *testing.T) {
 		expectError error
 	}{
 		{"normal", []string{"en-US"}, nil, language.AmericanEnglish, nil},
+		{"invalid", []string{"ac"}, nil, language.Und, nil},
 		{"not detected", nil, ErrNotDetected, language.Und, ErrNotDetected},
 	}
 
@@ -90,6 +91,15 @@ func TestDetect(t *testing.T) {
 				t.Errorf("Detect() = %v, want %v", lang, tt.expectLang)
 			}
 		})
+	}
+}
+
+func BenchmarkDetect(b *testing.B) {
+	detectors = []detector{mockLang.get}
+
+	mockLang.set([]string{"en-US"}, nil)
+	for i := 0; i < b.N; i++ {
+		Detect()
 	}
 }
 
