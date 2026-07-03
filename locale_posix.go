@@ -1,5 +1,4 @@
-//go:build aix || dragonfly || freebsd || hurd || illumos || linux || nacl || netbsd || openbsd || plan9 || solaris || zos
-// +build aix dragonfly freebsd hurd illumos linux nacl netbsd openbsd plan9 solaris zos
+//go:build (aix || dragonfly || freebsd || hurd || illumos || linux || nacl || netbsd || openbsd || plan9 || solaris || zos) && !android
 
 package locale
 
