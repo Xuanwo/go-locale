@@ -10,10 +10,10 @@
 
 ## OS Support
 
-Support all OS that Golang supported, except `android`:
+Support all OS that Golang supported:
 
 - [aix: IBM AIX operating system](https://www.ibm.com/it-infrastructure/power/os/aix)
-- android (*have no idea on this*)
+- [android](https://www.android.com/)
 - [darwin: Drawin, Mac OS X](https://opensource.apple.com/)
 - [dragonfly: DragonFly BSD](https://www.dragonflybsd.org/)
 - [freebsd: FreeBSD](https://www.freebsd.org/)
