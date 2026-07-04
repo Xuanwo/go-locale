@@ -1,5 +1,5 @@
-//go:build !windows && !darwin && !js
-// +build !windows,!darwin,!js
+//go:build !windows && !darwin && !js && !android
+// +build !windows,!darwin,!js,!android
 
 package locale
 
