@@ -4,6 +4,7 @@ package locale
 
 import (
 	"bytes"
+	"fmt"
 	"os/exec"
 	"strings"
 )
@@ -14,35 +15,76 @@ var detectors = []detector{
 	detectViaGetProp,
 }
 
-var androidGetPropKeys = []string{
+var androidLocaleKeys = []string{
 	"persist.sys.locale",
 	"ro.product.locale",
+	"persist.sys.language",
+}
+
+var androidGetPropPaths = []string{
+	"/system/bin/getprop",
+	"getprop",
 }
 
 func detectViaGetProp() ([]string, error) {
-	for _, key := range androidGetPropKeys {
+	for _, key := range androidLocaleKeys {
 		lang, err := getSystemProperty(key)
 		if err == nil {
 			return []string{lang}, nil
 		}
 	}
+	lang, country := tryCombinedLocale()
+	if lang != "" && country != "" {
+		return []string{fmt.Sprintf("%s-%s", lang, country)}, nil
+	}
+	lang, country = tryCombinedLocaleAlt()
+	if lang != "" && country != "" {
+		return []string{fmt.Sprintf("%s-%s", lang, country)}, nil
+	}
 	return nil, &Error{"detect via getprop", ErrNotDetected}
 }
 
-func getSystemProperty(key string) (string, error) {
-	cmd := exec.Command("getprop", key)
-
-	var out bytes.Buffer
-	cmd.Stdout = &out
-
-	err := cmd.Run()
+func tryCombinedLocale() (string, string) {
+	lang, err := getSystemProperty("persist.sys.language")
 	if err != nil {
-		return "", &Error{"detect via getprop", err}
+		return "", ""
 	}
+	country, err := getSystemProperty("persist.sys.country")
+	if err != nil {
+		return "", ""
+	}
+	if lang == "" || country == "" {
+		return "", ""
+	}
+	return lang, country
+}
 
-	content := strings.TrimSpace(out.String())
-	if content == "" {
-		return "", &Error{"detect via getprop", ErrNotDetected}
+func tryCombinedLocaleAlt() (string, string) {
+	lang, err := getSystemProperty("ro.product.locale.language")
+	if err != nil {
+		return "", ""
 	}
-	return content, nil
+	country, err := getSystemProperty("ro.product.locale.region")
+	if err != nil {
+		return "", ""
+	}
+	return lang, country
+}
+
+func getSystemProperty(key string) (string, error) {
+	for _, path := range androidGetPropPaths {
+		cmd := exec.Command(path, key)
+		var out bytes.Buffer
+		cmd.Stdout = &out
+		err := cmd.Run()
+		if err != nil {
+			continue
+		}
+		content := strings.TrimSpace(out.String())
+		if content == "" {
+			continue
+		}
+		return content, nil
+	}
+	return "", &Error{"detect via getprop", ErrNotDetected}
 }
